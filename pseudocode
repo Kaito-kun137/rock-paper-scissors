@@ -1,0 +1,100 @@
+BEGIN
+//'Initialize score variables to track each players wins'
+    humanScore = 0
+    computerScore = 0
+
+//'Function to generate a random computer choice' 
+    FUNCTION getComputerChoice()
+        // Generate random number between 0 and 3
+        randomNum = RANDOM() * 3
+        randomIndex = FLOOR(randomNum)
+
+//'Map random index to rock, paper, or scissors'
+        IF randomIndex = 0 THEN 
+            RETURN 'rock'
+        ELSE IF randomIndex = 1 THEN 
+            RETURN 'paper'
+        ELSE 
+            RETURN 'scissors'
+        END IF 
+    END FUNCTION 
+
+//'Function to get the human players choice via prompt'
+FUNCTION getHumanChoice()
+    userInput = PROMPT("Enter your choice: rock, paper, or scissors")
+    RETURN userInput 
+END FUNCTION 
+
+//'Function to play a single round and determine the winner'
+FUNCTION playRound(humanChoice, computerChoice)
+//'Convert human choice to lowercase for case-sensitive comparison'
+    humanChoice = LOWERCASE(humanChoice)
+
+//'Check for tie'
+    IF humanChoice = computerChoice THEN 
+        OUTPUT "It's a tie! " + humanChoice + " ties " + computerChoice 
+
+//'Check for human win conditions'
+    ELSE IF humanChoice = "rock" AND computerChoice = "scissors" THEN 
+        OUTPUT "You win! Rock beats Scissors"
+        humanScore = humanScore + 1
+    ELSE IF humanChoice = "paper" AND computerChoice = "rock" THEN
+        OUTPUT "You win! Paper beats Rock"
+        humanScore = humanScore + 1
+    ELSE IF humanChoice = "scissors" AND computerChoice = "paper" THEN
+        OUTPUT "You win! Scissors beats Paper"
+        humanScore = humanScore + 1
+
+//'Computer wins (all other cases)'
+    ELSE
+        OUTPUT "You lose! " + computerChoice + " beats " + humanChoice
+        computerScore = computerScore + 1
+    END IF 
+END FUNCTION
+
+//Main game function that plays 5 rounds 
+FUNCTION playgame()
+
+//Initialize score variables to track each players wins
+    humanScore = 0
+    computerScore = 0
+
+//Play 5 rounds
+    OUTPUT "---Round 1---"
+    playRound(gethumanChoice(). getComputerChoice())
+
+    OUTPUT "---Round 2---"
+    playRound(getHumanChoice(), getComputerChoice())
+
+    OUTPUT "---Round 3---"
+    playRound(getHumanChoice(), getComputerChoice())
+
+    OUTPUT "---Round 4---"
+    playRound(getHumanChoice(), getComputerChoice())
+
+    OUTPUT "---Round 5---"
+    playRound(getHumanChoice(), getComputerChoice())
+
+//Declare final winner
+    OUTPUT "Final Scores:"
+    OUTPUT "Human: " + humanScore
+    OUTPUT "Computer: " + computerScore
+
+    IF humanScore > computerScore THEN
+        OUTPUT "You win the game!"
+    ELSE IF computerScore > humanScore THEN 
+        OUTPUT "Computer wins the game!"
+    ELSE 
+        OUTPUT "Its a tie game!"
+    END IF
+END FUNCTION
+
+//Start the game
+    playgame()
+END
+
+
+       
+
+
+     
