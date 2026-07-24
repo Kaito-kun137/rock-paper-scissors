@@ -1,9 +1,11 @@
 let playerScore = 0;
 let computerScore = 0;
 
+const scoreDisplay = document.getElementById("score");
+const resultsDisplay = document.getElementById("results");
+
 function getComputerChoice() {
-    const randomNum = Math.random() * 3;
-    const randomIndex = Math.floor(randomNum);
+    const randomIndex = Math.floor(Math.random() * 3);
 
     if (randomIndex === 0) {
         return "rock";
@@ -14,83 +16,49 @@ function getComputerChoice() {
     }
 }
 
-const prompt = require('prompt-sync')();
-
-// Function to get the human player's choice via prompt
-function getHumanChoice() {
-    const userInput = prompt("Enter your choice: rock, paper, or scissors: ");
-    return userInput;
+function updateScore() {
+    scoreDisplay.textContent = `Score - You: ${playerScore} | Computer: ${computerScore}`;
 }
 
-// Function to play a single round and determine the winner
-function playRound(humanChoice, computerChoice) {
-    // Convert human choice to lowercase for case-insensitive comparision
-    humanChoice = humanChoice.toLowerCase();
+function playRound(playerSelection) {
+    const computerSelection = getComputerChoice();
+    let resultMessage;
 
-// Check for tie
-    if (humanChoice === computerChoice) {
-        console.log(`Its a tie! ${humanChoice} ties ${computerChoice}`);
-    }
-// Check for human win conditions
-    else if (humanChoice === "rock" && computerChoice === "scissors") {
-        console.log("You win! Rock beats Scissors");
+    if (playerSelection === computerSelection) {
+        resultMessage = `It's a tie! You both chose ${playerSelection}.`;
+    } else if (
+        (playerSelection === "rock" && computerSelection === "scissors") ||
+        (playerSelection === "paper" && computerSelection === "rock") ||
+        (playerSelection === "scissors" && computerSelection === "paper")
+    ) {
         playerScore++;
-    } else if (humanChoice === "paper" && computerChoice === "rock") {
-        console.log("You win! Paper beats Rock");
-        playerScore++;
-    } else if (humanChoice === "scissors" && computerChoice === "paper") {
-        console.log("You win! Scissors beats Paper");
-        playerScore++;
-    }
-    // Computer wins (all other cases)
-    else {
-        console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-        computerScore++;
-    }
-
-}
-
-// Main game function that plays 5 rounds 
-function playGame() {
-    // Reset scores
-    playerScore = 0;
-    computerScore = 0;
-
-    // Play 5 rounds
-    console.log("---Round 1---");
-    playRound(getHumanChoice(), getComputerChoice());
-
-    console.log("---Round 2---");
-    playRound(getHumanChoice(), getComputerChoice());
-
-    console.log("---Round 3---");
-    playRound(getHumanChoice(), getComputerChoice());
-
-    console.log("---Round 4---");
-    playRound(getHumanChoice(), getComputerChoice());
-
-    console.log("---Round 5---");
-    playRound(getHumanChoice(), getComputerChoice());
-
-    // Declare final winner
-    console.log("\nFinal Scores:");
-    console.log(`Human: ${computerScore}`);
-    console.log(`Computer: ${computerScore}`);
-
-    if (playerScore > computerScore) {
-        console.log("You win the game!");
-    } else if (computerScore > playerScore) {
-        console.log("Computer wins the game!");
+        resultMessage = `You win! ${playerSelection} beats ${computerSelection}.`;
     } else {
-        console.log("It's a tie game!");
+        computerScore++;
+        resultMessage = `You lose! ${computerSelection} beats ${playerSelection}.`;
     }
 
+    updateScore();
+
+    if (playerScore === 5) {
+        resultsDisplay.textContent = `You win the game! ${resultMessage}`;
+        document.querySelectorAll("button").forEach((button) => {
+            button.disabled = true;
+        });
+    } else if (computerScore === 5) {
+        resultsDisplay.textContent = `Computer wins the game! ${resultMessage}`;
+        document.querySelectorAll("button").forEach((button) => {
+            button.disabled = true;
+        });
+    } else {
+        resultsDisplay.textContent = `${resultMessage}`;
+    }
 }
 
-// Start the game 
-playGame();
+document.querySelectorAll("button[data-selection]").forEach((button) => {
+    button.addEventListener("click", () => {
+        playRound(button.dataset.selection);
+    });
+});
 
-
-
-
-
+updateScore();
